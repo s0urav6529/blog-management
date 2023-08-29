@@ -5,7 +5,11 @@ const multer = require("multer");
 const path = require("path");
 
 //internal import
-const { login, blogRegister } = require("../controllers/adminController");
+const {
+  login,
+  blogRegister,
+  blogRegisterSave,
+} = require("../controllers/adminController");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -17,10 +21,13 @@ const storage = multer.diskStorage({
   },
 });
 
-// create upload varible
+// create upload varible for file
 const upload = multer({ storage: storage });
 
 adminRoute.route("/login").get(login);
 adminRoute.route("/blog-register").get(blogRegister);
+adminRoute
+  .route("/blog-register")
+  .post(upload.single("blog_image"), blogRegisterSave);
 
 module.exports = adminRoute;

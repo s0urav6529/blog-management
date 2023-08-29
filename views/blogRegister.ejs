@@ -39,4 +39,11 @@
             </div>
         </form>
     </dir>
+
+    <% if(typeof message !== "undefined"){ %>
+
+        <p style="color: red;"><%= message%></p>
+       
+    <% }%>
+
 <%- include("./layouts/footer.ejs") %>

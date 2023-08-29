@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const blogRegisterSchema = mongoose.Schema(
   {
-    blog_name: {
+    blog_title: {
       type: String,
       required: true,
     },
