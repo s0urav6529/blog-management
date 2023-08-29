@@ -5,11 +5,13 @@ const dotenv = require("dotenv").config();
 const http = require("http");
 const bodyParser = require("body-parser");
 const path = require("path");
+const session = require("express-session");
 
 //internal module
 const dbConnection = require("./config/dbConnection");
 dbConnection();
 const adminRoute = require("./routes/adminRoute");
+const userRoute = require("./routes/userRoute");
 const { isBlogRegistered } = require("./middlewares/isBlogRegistered");
 
 // create server of http
@@ -22,6 +24,9 @@ app.set("views", "./views");
 // use static path
 app.use(express.static(path.join(__dirname, "public")));
 
+// use session
+app.use(session({ secret: process.env.SESSION_SECRET }));
+
 //json body parser
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -29,8 +34,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //check registered or not
 app.use(isBlogRegistered);
 
-// use the routes
+// use admin route
 app.use("/", adminRoute);
+
+// use user route
+app.use("/", userRoute);
 
 //start the server
 server.listen(process.env.PORT, () => {

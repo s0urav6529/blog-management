@@ -12,11 +12,6 @@ const securedPassword = async (password) => {
   }
 };
 
-//login controller
-const login = async (req, res) => {
-  res.send("Hi login here");
-};
-
 //registration controller
 const blogRegister = async (req, res) => {
   try {
@@ -74,8 +69,16 @@ const blogRegisterSave = async (req, res) => {
   }
 };
 
+const dashboard = async (req, res) => {
+  try {
+    res.render("admin/dashboard");
+  } catch (err) {
+    console.log(err.message);
+  }
+};
+
 module.exports = {
-  login,
   blogRegister,
   blogRegisterSave,
+  dashboard,
 };
