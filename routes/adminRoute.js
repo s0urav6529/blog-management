@@ -10,6 +10,7 @@ const {
   blogRegisterSave,
   dashboard,
 } = require("../controllers/adminController");
+const { isLogin } = require("../middlewares/adminLoginAuth");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -24,10 +25,11 @@ const storage = multer.diskStorage({
 // create upload varible for file
 const upload = multer({ storage: storage });
 
-adminRoute.route("/blog-register").get(blogRegister);
 adminRoute
   .route("/blog-register")
+  .get(blogRegister)
   .post(upload.single("blog_image"), blogRegisterSave);
-adminRoute.route("/dashboard").get(dashboard);
+
+adminRoute.route("/dashboard").get(isLogin, dashboard);
 
 module.exports = adminRoute;

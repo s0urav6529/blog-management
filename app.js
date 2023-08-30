@@ -25,7 +25,13 @@ app.set("views", "./views");
 app.use(express.static(path.join(__dirname, "public")));
 
 // use session
-app.use(session({ secret: process.env.SESSION_SECRET }));
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: true,
+    saveUninitialized: true,
+  })
+);
 
 //json body parser
 app.use(express.json());

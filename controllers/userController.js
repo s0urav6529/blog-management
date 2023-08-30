@@ -21,7 +21,8 @@ const varifyLogin = async (req, res) => {
         req.session.user_id = userExist._id;
         req.session.is_admin = userExist.is_admin;
 
-        if (userExist.is_admin == "1") {
+        if (userExist.is_admin === "1") {
+          // user is admin
           res.redirect("/dashboard");
         } else {
           res.redirect("/profile");
