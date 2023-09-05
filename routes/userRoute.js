@@ -3,12 +3,14 @@ const {
   loadLogin,
   varifyLogin,
   userProfile,
+  loadLogout,
 } = require("../controllers/userController");
-const { isLogout } = require("../middlewares/adminLoginAuth");
+const { isLogout, isLogin } = require("../middlewares/adminLoginAuth");
 const userRoute = express.Router();
 
 //user routes
 userRoute.route("/login").get(isLogout, loadLogin).post(varifyLogin);
+userRoute.route("/logout").get(isLogin, loadLogout);
 userRoute.route("/profile").get(userProfile);
 
 module.exports = userRoute;

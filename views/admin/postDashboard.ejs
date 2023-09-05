@@ -1,0 +1,41 @@
+<%- include("../layouts/admin-header.ejs") %>
+
+<!-- Page Content  -->
+<div id="content" class="p-4 p-md-5 pt-5">
+    <h2 class="mb-4">Add Post</h2>
+
+    <div class="container">
+        <form method="POST">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h5>Title</h5>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-sm-12">
+                    <input type="text" name="title" required placeholder="Enter Post Title" class="w-100">
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-sm-12">
+                    <h5>Content</h5>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-sm-12">
+                    <textarea name="content" rows="5" placeholder="Enter Post Content" class="w-100"></textarea>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-sm-12">
+                    <input type="submit" value="Add Post" class="btn btn-primary">
+                </div>
+            </div>
+        </form>
+    </div>
+    <% if(typeof message !== 'undefined') {%>
+        <p style="color: green"><%= message %></p>
+    <%}%>
+</div>
+
+<%- include("../layouts/admin-footer.ejs") %>

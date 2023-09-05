@@ -46,4 +46,13 @@ const userProfile = async (req, res) => {
   }
 };
 
-module.exports = { loadLogin, varifyLogin, userProfile };
+const loadLogout = async (req, res) => {
+  try {
+    req.session.destroy();
+    res.redirect("/login");
+  } catch (err) {
+    console.log(err.message);
+  }
+};
+
+module.exports = { loadLogin, loadLogout, varifyLogin, userProfile };

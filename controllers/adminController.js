@@ -1,5 +1,6 @@
 const blogregister = require("../models/blogRegisterModel");
 const User = require("../models/userModel");
+const Post = require("../models/postModel");
 const bcrypt = require("bcrypt");
 
 // method for password hashing
@@ -69,9 +70,33 @@ const blogRegisterSave = async (req, res) => {
   }
 };
 
+// load the dashboard
 const dashboard = async (req, res) => {
   try {
     res.render("admin/dashboard");
+  } catch (err) {
+    console.log(err.message);
+  }
+};
+
+// load post dashboard
+const loadPostDashboard = async (req, res) => {
+  try {
+    res.render("admin/postDashboard");
+  } catch (err) {
+    console.log(err.message);
+  }
+};
+
+const addPost = async (req, res) => {
+  try {
+    const post = new Post({
+      title: req.body.title,
+      content: req.body.content,
+    });
+
+    await post.save();
+    res.render("admin/postDashboard", { message: "Post added successfully" });
   } catch (err) {
     console.log(err.message);
   }
@@ -81,4 +106,6 @@ module.exports = {
   blogRegister,
   blogRegisterSave,
   dashboard,
+  loadPostDashboard,
+  addPost,
 };

@@ -9,6 +9,8 @@ const {
   blogRegister,
   blogRegisterSave,
   dashboard,
+  loadPostDashboard,
+  addPost,
 } = require("../controllers/adminController");
 const { isLogin } = require("../middlewares/adminLoginAuth");
 
@@ -31,5 +33,9 @@ adminRoute
   .post(upload.single("blog_image"), blogRegisterSave);
 
 adminRoute.route("/dashboard").get(isLogin, dashboard);
+adminRoute
+  .route("/create-post")
+  .get(isLogin, loadPostDashboard)
+  .post(isLogin, addPost);
 
 module.exports = adminRoute;
