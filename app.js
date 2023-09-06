@@ -12,6 +12,7 @@ const dbConnection = require("./config/dbConnection");
 dbConnection();
 const adminRoute = require("./routes/adminRoute");
 const userRoute = require("./routes/userRoute");
+const blogRoute = require("./routes/blogRoute");
 const { isBlogRegistered } = require("./middlewares/isBlogRegistered");
 
 // create server of http
@@ -45,6 +46,9 @@ app.use("/", adminRoute);
 
 // use user route
 app.use("/", userRoute);
+
+// use blog route
+app.use("/", blogRoute);
 
 //start the server
 server.listen(process.env.PORT, () => {

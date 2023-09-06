@@ -1,0 +1,25 @@
+<%- include('./layouts/header.ejs')%>
+
+<!-- Page Content-->
+
+<%if(allpost.length > 0) {
+
+    for(let i = 0 ;i<allpost.length;i++){ %>
+
+        <div class="container px-4 px-lg-5">
+            <!-- Heading Row-->
+            <div class="row gx-4 gx-lg-5 align-items-center my-5">
+                <div class="col-lg-7"><img class="img-fluid rounded mb-4 mb-lg-0" src="https://dummyimage.com/900x400/dee2e6/6c757d.jpg" alt="..." /></div>
+                <div class="col-lg-5">
+                    <h1 class="font-weight-light"><%= allpost[i].title%></h1>
+                    <p><%= allpost[i].content%></p>
+                    <a class="btn btn-primary" href="/post/<%=allpost[i]._id%>">Read More</a>
+                </div>
+            </div>
+        </div>
+
+    <%} } else {%>
+    <h2><center>Post not available!</center></h2>
+<%}%>
+
+<%- include('./layouts/footer.ejs')%>

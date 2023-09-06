@@ -1,23 +1,26 @@
 <%- include("./layouts/header.ejs") %>
     <dir>
-        <h1>Login</h1>
-        <form action="" method="POST">
-            <div class="row">
-                <div class="col-sm-20">
-                    <input type="email" name="email" placeholder="Enter Email" required>
+        <div class="container mb-5 mt-5" >
+            <h1>Login</h1>
+            <form action="" method="POST">
+                <div class="row">
+                    <div class="col-sm-20">
+                        <input type="email" name="email" placeholder="Enter Email" required>
+                    </div>
                 </div>
-            </div>
-            <div class="row mt-3">
-                <div class="col-sm-20">
-                    <input type="password" name="password" placeholder="Enter Password" required>
+                <div class="row mt-3">
+                    <div class="col-sm-20">
+                        <input type="password" name="password" placeholder="Enter Password" required>
+                    </div>
                 </div>
-            </div>
-            <div class="row mt-3">
-                <div class="col-sm-20">
-                    <input type="submit" class="btn btn-info" value="Login">
+                <div class="row mt-3">
+                    <div class="col-sm-20">
+                        <input type="submit" class="btn btn-info" value="Login">
+                    </div>
                 </div>
-            </div>
-        </form>
+            </form>
+            <a href="/forget-password">Forget password</a>
+        </div>
     </dir>
     <%if(typeof message !== 'undefined') { %>
 
