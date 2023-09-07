@@ -61,7 +61,7 @@ const loadLogout = async (req, res) => {
   }
 };
 
-const loadforgetpassword = async (req, res) => {
+const loadForgetPassword = async (req, res) => {
   try {
     res.render("forget-password.ejs");
   } catch (err) {
@@ -125,7 +125,7 @@ const forgetPasswordVarify = async (req, res) => {
   }
 };
 
-const loadresetpassword = async (req, res) => {
+const loadResetPassword = async (req, res) => {
   try {
     const token = req.query.token; /// the token from the url
 
@@ -141,7 +141,7 @@ const loadresetpassword = async (req, res) => {
   }
 };
 
-const resetpassword = async (req, res) => {
+const resetPassword = async (req, res) => {
   try {
     const password = req.body.password;
     const userId = req.body.userId;
@@ -163,8 +163,8 @@ module.exports = {
   loadLogout,
   varifyLogin,
   userProfile,
-  loadforgetpassword,
+  loadForgetPassword,
   forgetPasswordVarify,
-  loadresetpassword,
-  resetpassword,
+  loadResetPassword,
+  resetPassword,
 };
