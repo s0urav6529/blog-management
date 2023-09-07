@@ -5,10 +5,11 @@ const randomstring = require("randomstring");
 //internal import
 const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
+const { securedPassword } = require("./adminController");
 
 const loadLogin = async (req, res) => {
   try {
-    res.render("login");
+    res.render("login.ejs");
   } catch (err) {
     console.log(err.message);
   }
@@ -33,10 +34,10 @@ const varifyLogin = async (req, res) => {
           res.redirect("/profile");
         }
       } else {
-        res.render("login", { message: "User or password incorrect!" });
+        res.render("login.ejs", { message: "User or password incorrect!" });
       }
     } else {
-      res.render("login", { message: "User or password incorrect!" });
+      res.render("login.ejs", { message: "User or password incorrect!" });
     }
   } catch (err) {
     console.log(err.message);
@@ -62,7 +63,7 @@ const loadLogout = async (req, res) => {
 
 const loadforgetpassword = async (req, res) => {
   try {
-    res.render("forget-password");
+    res.render("forget-password.ejs");
   } catch (err) {
     console.log(err.message);
   }
@@ -87,10 +88,11 @@ const sendResetPasswordMail = async (name, email, token) => {
       html:
         "<p>Hi " +
         name +
-        'Please click here to <a href = "http://localhost:5001/reset-password?token=' +
+        ', Please click here to <a href = "http://localhost:5001/reset-password?token=' +
         token +
-        '"> reset your password.</p>',
+        '"> reset</a> your password.</p>',
     };
+    //console.log(transport, mailOptions);
     transport.sendMail(mailOptions, (error, info) => {
       if (error) {
         console.log(error);
@@ -112,12 +114,45 @@ const forgetPasswordVarify = async (req, res) => {
       const randomString = randomstring.generate();
       await User.updateOne({ email: email }, { $set: { token: randomString } });
       sendResetPasswordMail(userExist.name, userExist.email, randomString);
-      res.render("forget-password", {
-        message: "Please check your mail to reset password.",
+      res.render("forget-password.ejs", {
+        message: "Please check your email to reset password.",
       });
     } else {
-      res.render("forget-password", { message: "User email not exits." });
+      res.render("forget-password.ejs", { message: "User email not exits." });
     }
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const loadresetpassword = async (req, res) => {
+  try {
+    const token = req.query.token; /// the token from the url
+
+    const tokenExist = await User.findOne({ token: token });
+
+    if (tokenExist) {
+      res.render("reset-password.ejs", { userId: tokenExist._id });
+    } else {
+      res.render("404notfound.ejs");
+    }
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const resetpassword = async (req, res) => {
+  try {
+    const password = req.body.password;
+    const userId = req.body.userId;
+
+    const securedpassword = await securedPassword(password);
+
+    await User.findByIdAndUpdate(
+      { _id: userId },
+      { $set: { password: securedpassword, token: "" } }
+    );
+    res.redirect("/login");
   } catch (error) {
     console.log(error.message);
   }
@@ -130,4 +165,6 @@ module.exports = {
   userProfile,
   loadforgetpassword,
   forgetPasswordVarify,
+  loadresetpassword,
+  resetpassword,
 };
