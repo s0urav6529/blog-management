@@ -30,44 +30,30 @@
                         <!-- Comment form-->
                         <h5>Leave a comment</h5>
                         <form class="mb-4" id="comment-form">
+                            <input type="hidden" name="postId" value="<%= singlepost._id%>" >
                             <input type="text" class="form-control mb-3" name="username" placeholder="Enter your name" required >
                             <textarea class="form-control" name="comment" placeholder="what's your opinion?" required rows="3"></textarea>
                             <input type="submit" value="Submit" class="btn btn-primary mt-3">
                         </form>
                         <p class="comment-status" style="color: green;"></p>
-                        <!-- Comment with nested comments-->
-                        <div class="d-flex mb-4">
-                            <!-- Parent comment-->
-                            <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
-                            <div class="ms-3">
-                                <div class="fw-bold">Commenter Name</div>
-                                If you're going to lead a space frontier, it has to be government; it'll never be private enterprise. Because the space frontier is dangerous, and it's expensive, and it has unquantified risks.
-                                <!-- Child comment 1-->
-                                <div class="d-flex mt-4">
-                                    <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
-                                    <div class="ms-3">
-                                        <div class="fw-bold">Commenter Name</div>
-                                        And under those conditions, you cannot establish a capital-market evaluation of that enterprise. You can't get investors.
-                                    </div>
-                                </div>
-                                <!-- Child comment 2-->
-                                <div class="d-flex mt-4">
-                                    <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
-                                    <div class="ms-3">
-                                        <div class="fw-bold">Commenter Name</div>
-                                        When you put money directly to a problem, it makes a good headline.
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                       
                         <!-- Single comment-->
-                        <div class="d-flex">
-                            <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
-                            <div class="ms-3">
-                                <div class="fw-bold">Commenter Name</div>
-                                When I look at the universe and all the ways the universe wants to kill us, I find it hard to reconcile that with statements of beneficence.
-                            </div>
-                        </div>
+                        <% if(singlepost.comment.length > 0){
+
+                            for(let i=singlepost.comment.length-1 ;i>=0;i--){
+                                %>
+                                    <div class="d-flex mt-3">
+                                        <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
+                                        <div class="ms-3">
+                                            <div class="fw-bold"><%=singlepost.comment[i].username%></div>
+                                            <%=singlepost.comment[i].comment%>
+                                        </div>
+                                    </div>
+                                <%
+                            }
+                        }
+                        %>
+                        
                     </div>
                 </div>
             </section>
@@ -89,7 +75,25 @@
 </div>
 
 <script>
-    
+    $(document).ready(function(){
+        $('#comment-form').submit(function(event){
+            event.preventDefault();
+
+            const formData = $(this).serialize();
+
+            $.ajax({
+                url:"/add-comment",
+                type:"POST",
+                data:formData,
+                success:function(data){
+                    $('.comment-status').text(data.msg);
+                    setTimeout(()=>{
+                        $('.comment-status').text("");
+                    },3000);
+                }
+            })
+        })
+    })
 </script>
 
 <%- include("./layouts/footer.ejs")%>

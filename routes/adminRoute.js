@@ -11,6 +11,7 @@ const {
   dashboard,
   loadPostDashboard,
   addPost,
+  uploadPostImage,
 } = require("../controllers/adminController");
 const { isLogin } = require("../middlewares/adminLoginAuth");
 
@@ -37,5 +38,9 @@ adminRoute
   .route("/create-post")
   .get(isLogin, loadPostDashboard)
   .post(isLogin, addPost);
+
+adminRoute
+  .route("/upload-post-image")
+  .post(upload.single("image"), isLogin, uploadPostImage);
 
 module.exports = adminRoute;

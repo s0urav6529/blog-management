@@ -102,6 +102,16 @@ const addPost = async (req, res) => {
   }
 };
 
+const uploadPostImage = async (req, res) => {
+  try {
+    let imagePath = "/images";
+    imagePath = imagePath + "/" + req.file.filename;
+    res.send({ success: true, msg: "Image uploaded!", path: imagePath });
+  } catch (error) {
+    res.send({ success: false, msg: error.message });
+  }
+};
+
 module.exports = {
   blogRegister,
   blogRegisterSave,
@@ -109,4 +119,5 @@ module.exports = {
   loadPostDashboard,
   addPost,
   securedPassword,
+  uploadPostImage,
 };

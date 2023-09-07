@@ -19,4 +19,24 @@ const loadpost = async (req, res) => {
   }
 };
 
-module.exports = { loadBlog, loadpost };
+const addComment = async (req, res) => {
+  try {
+    const postId = req.body.postId;
+    const userName = req.body.username;
+    const comment = req.body.comment;
+
+    await post.findByIdAndUpdate(
+      { _id: postId },
+      {
+        $push: {
+          comment: { username: userName, comment: comment },
+        },
+      }
+    );
+    res.status(200).send({ success: true, msg: "Comment added!" });
+  } catch (error) {
+    res.status(500).send({ success: false, msg: error.message });
+  }
+};
+
+module.exports = { loadBlog, loadpost, addComment };
