@@ -29,7 +29,7 @@ const addComment = async (req, res) => {
       { _id: postId },
       {
         $push: {
-          comment: { username: userName, comment: comment },
+          comments: { username: userName, comment: comment },
         },
       }
     );

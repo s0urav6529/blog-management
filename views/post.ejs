@@ -38,15 +38,15 @@
                         <p class="comment-status" style="color: green;"></p>
                        
                         <!-- Single comment-->
-                        <% if(singlepost.comment.length > 0){
+                        <% if(singlepost.comments.length > 0){
 
-                            for(let i=singlepost.comment.length-1 ;i>=0;i--){
+                            for(let i=singlepost.comments.length-1 ;i>=0;i--){
                                 %>
                                     <div class="d-flex mt-3">
                                         <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
                                         <div class="ms-3">
-                                            <div class="fw-bold"><%=singlepost.comment[i].username%></div>
-                                            <%=singlepost.comment[i].comment%>
+                                            <div class="fw-bold"><%=singlepost.comments[i].username%></div>
+                                            <%=singlepost.comments[i].comment%>
                                         </div>
                                     </div>
                                 <%

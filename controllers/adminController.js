@@ -90,9 +90,15 @@ const loadPostDashboard = async (req, res) => {
 
 const addPost = async (req, res) => {
   try {
+    let image = "";
+    if (req.body.image !== "undefined") {
+      image = req.body.image;
+    }
+
     const post = new Post({
       title: req.body.title,
       content: req.body.content,
+      image: image,
     });
 
     await post.save();
