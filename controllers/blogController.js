@@ -1,8 +1,45 @@
 //external import
 const { ObjectId } = require("mongodb");
+const nodemailer = require("nodemailer");
 
 //internal import
 const post = require("../models/postModel");
+
+const sendReplyMail = async (replierName, commenterEmail, postId) => {
+  try {
+    const transport = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      requireTLS: true,
+      auth: {
+        user: process.env.USER_EMAIL,
+        pass: process.env.USER_PASSWORD,
+      },
+    });
+    const mailOptions = {
+      from: "BMS",
+      to: commenterEmail,
+      subject: "Reply Notification",
+      html:
+        "<p>" +
+        replierName +
+        ', has reply to your comment.<a href = "http://localhost:5001/post/' +
+        postId +
+        '">Check</a> your reply.</p>',
+    };
+    //console.log(transport, mailOptions);
+    transport.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log("Notification email has been sent:-", info.response);
+      }
+    });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 
 const loadBlog = async (req, res) => {
   try {
@@ -43,6 +80,7 @@ const addComment = async (req, res) => {
         },
       }
     );
+
     res.status(200).send({ success: true, msg: "Comment added!" });
   } catch (error) {
     res.status(500).send({ success: false, msg: error.message });
@@ -57,6 +95,8 @@ const doReply = async (req, res) => {
     const reply = req.body.reply;
     const replyId = new ObjectId();
 
+    const commenterEmail = req.body.commentEmail;
+
     const data = await post.updateOne(
       { _id: new ObjectId(postId), "comments._id": new ObjectId(commentId) },
       {
@@ -69,7 +109,7 @@ const doReply = async (req, res) => {
         },
       }
     );
-    console.log(data);
+    sendReplyMail(replierName, commenterEmail, postId);
     res.send({ success: true, msg: "Reply added!" });
   } catch (error) {
     res.send({ success: false, msg: error.message });
