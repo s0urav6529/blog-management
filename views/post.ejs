@@ -17,7 +17,15 @@
                     <!-- <a class="badge bg-secondary text-decoration-none link-light" href="#!">Freebies</a> -->
                 </header>
                 <!-- Preview image figure-->
-                <figure class="mb-4"><img class="img-fluid rounded" src="https://dummyimage.com/900x400/ced4da/6c757d.jpg" alt="..." /></figure>
+                <% if(singlepost.image !== undefined && singlepost.image !== ""){
+                    %>
+                        <div class="col-lg-7"><img class="img-fluid rounded mb-4 mb-lg-0" src="<%= singlepost.image%>" alt="..." /></div>
+                    <%
+                }else{
+                    %>
+                        <div class="col-lg-7"><img class="img-fluid rounded mb-4 mb-lg-0" src="https://dummyimage.com/900x400/dee2e6/6c757d.jpg" alt="..." /></div>
+                    <%
+                }%>
                 <!-- Post content-->
                 <section class="mb-5">
                     <p class="fs-5 mb-4"><%= singlepost.content%></p>
