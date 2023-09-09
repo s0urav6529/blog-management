@@ -6,6 +6,7 @@ const http = require("http");
 const bodyParser = require("body-parser");
 const path = require("path");
 const session = require("express-session");
+const { Server } = require("socket.io");
 
 //internal module
 const dbConnection = require("./config/dbConnection");
@@ -15,8 +16,9 @@ const userRoute = require("./routes/userRoute");
 const blogRoute = require("./routes/blogRoute");
 const { isBlogRegistered } = require("./middlewares/isBlogRegistered");
 
-// create server of http
+// create server of http & socket
 const server = http.createServer(app);
+const io = new Server(server, {});
 
 // set view engine & views
 app.set("view engine", "ejs");
@@ -49,6 +51,11 @@ app.use("/", userRoute);
 
 // use blog route
 app.use("/", blogRoute);
+
+// if anything emit inside socket it will listen
+io.on("connection", (socket) => {
+  console.log("User Connected");
+});
 
 //start the server
 server.listen(process.env.PORT, () => {
