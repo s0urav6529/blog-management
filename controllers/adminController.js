@@ -101,10 +101,17 @@ const addPost = async (req, res) => {
       image: image,
     });
 
-    await post.save();
-    res.render("admin/postDashboard", { message: "Post added successfully" });
-  } catch (err) {
-    console.log(err.message);
+    const postData = await post.save();
+
+    res.send({
+      success: true,
+      msg: "Post Added Successfully!",
+      _id: postData._id,
+    });
+
+    //res.render("admin/postDashboard", { message: "Post added successfully" });
+  } catch (error) {
+    res.send({ success: false, msg: error.message });
   }
 };
 

@@ -1,34 +1,67 @@
 <%- include('./layouts/header.ejs')%>
 
 <!-- Page Content-->
+<div class="container px-4 px-lg-5 mb-3 allpost">
+<!-- Heading Row-->
 
 <%if(allpost.length > 0) {
 
-    for(let i = 0 ;i<allpost.length;i++){ %>
+    allpost = allpost.reverse();
 
-        <div class="container px-4 px-lg-5">
-            <!-- Heading Row-->
+    allpost.forEach((post)=>{
+        %>
             <div class="row gx-4 gx-lg-5 align-items-center my-5">
-                <% if(allpost[i].image !== undefined && allpost[i].image !== ""){
-                    %>
-                        <div class="col-lg-7"><img class="img-fluid rounded mb-4 mb-lg-0" src="<%= allpost[i].image%>" alt="..." /></div>
-                    <%
-                }else{
-                    %>
-                        <div class="col-lg-আজ রাত ১০ টা (sharp)7"><img class="img-fluid rounded mb-4 mb-lg-0" src="https://dummyimage.com/900x400/dee2e6/6c757d.jpg" alt="..." /></div>
-                    <%
-                }%>
-                
+                <div class="col-lg-7">
+                    <% if(post.image !== undefined && post.image !== ""){
+                        %>
+                            <img class="img-fluid rounded mb-4 mb-lg-0" src="<%= post.image%>" alt="..." />
+                        <%
+                    }else{
+                        %>
+                            <img class="img-fluid rounded mb-4 mb-lg-0" src="https://dummyimage.com/900x400/dee2e6/6c757d.jpg" alt="..." />
+                        <%
+                    }%>
+                </div>
                 <div class="col-lg-5">
-                    <h1 class="font-weight-light"><%= allpost[i].title%></h1>
-                    <p><%= allpost[i].content%></p>
-                    <a class="btn btn-primary" href="/post/<%=allpost[i]._id%>">Read More</a>
+                    <h1 class="font-weight-light"><%= post.title%></h1>
+                    <p><%= post.content%></p>
+                    <a class="btn btn-primary" href="/post/<%=post._id%>">Read More</a>
                 </div>
             </div>
-        </div>
-
-    <%} } else {%>
-    <h2><center>Post not available!</center></h2>
+        <%
+    }); } else {%>
+        <h2><center>Post not available!</center></h2>
 <%}%>
+</div>
+
+<script>
+
+    const socket = io();
+    socket.on("new_post",function(formData){
+
+        let image = "https://dummyimage.com/900x400/dee2e6/6c757d.jpg";
+
+        if(formData.image !== ''){
+            image = formData.image;
+        }
+
+        let html = "";
+        html += `
+            <div class="row gx-4 gx-lg-5 align-items-center my-5">
+                <div class="col-lg-7">
+                    <img class="img-fluid rounded mb-4 mb-lg-0" src="`+image+`" alt="..." />
+                </div>
+                <div class="col-lg-5">
+                    <h1 class="font-weight-light">`+formData.title+`</h1>
+                    <p>`+formData.content+`</p>
+                    <a class="btn btn-primary" href="/post/`+formData._id+`">Read More</a>
+                </div>
+            </div>
+        `;
+
+        $('.allpost').prepend(html);
+    });
+
+</script>
 
 <%- include('./layouts/footer.ejs')%>

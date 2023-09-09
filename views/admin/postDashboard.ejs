@@ -5,7 +5,7 @@
     <h2 class="mb-4">Add Post</h2>
 
     <div class="container">
-        <form method="POST">
+        <form id="addPost">
             <div class="row">
                 <div class="col-sm-12">
                     <h5>Title</h5>
@@ -92,6 +92,46 @@
                     }
                 }
             })
+        });
+        $("#addPost").submit(function(event){
+            
+            event.preventDefault();
+            let formData = {};
+
+            // get all the value from the form
+            $.each($(this).serializeArray(),function(i,field){
+                formData[field.name] = field.value;
+            });
+            // current form object
+            const obj = $(this);
+
+            $.ajax({
+                url:"/create-post",
+                type:"POST",
+                data:formData,      // we sending "formdata" to backend
+                success:function(data){     // backend send processed "data" to frontend 
+                    if(data.success === true){
+                        
+                        // alert message
+                        alert(data.msg);
+                       
+                        // reset the form & imagepath
+                        $(obj)[0].reset();
+                        $("#image").val('');
+
+                        // added id to form
+                        formData._id = data._id;
+
+                        //emit the task
+                        const socket = io();
+                        socket.emit("new_post",formData);
+                    }
+                    else{
+                        alert(data.msg);
+                    }
+                }
+            })
+
         });
     })
 </script>
