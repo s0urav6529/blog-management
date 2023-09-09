@@ -1,7 +1,10 @@
+//external import
+const bcrypt = require("bcrypt");
+
+//internal import
 const blogregister = require("../models/blogRegisterModel");
 const User = require("../models/userModel");
 const Post = require("../models/postModel");
-const bcrypt = require("bcrypt");
 
 // method for password hashing
 const securedPassword = async (password) => {
@@ -73,7 +76,8 @@ const blogRegisterSave = async (req, res) => {
 // load the dashboard
 const dashboard = async (req, res) => {
   try {
-    res.render("admin/dashboard");
+    const allPost = await Post.find({});
+    res.render("admin/dashboard", { allPost: allPost });
   } catch (err) {
     console.log(err.message);
   }
@@ -84,7 +88,7 @@ const loadPostDashboard = async (req, res) => {
   try {
     res.render("admin/postDashboard");
   } catch (err) {
-    console.log(err.message);
+    res.send({ success: false, msg: error.message });
   }
 };
 
@@ -115,6 +119,16 @@ const addPost = async (req, res) => {
   }
 };
 
+const deletePost = async (req, res) => {
+  try {
+    await Post.deleteOne({ _id: req.body.id });
+
+    res.send({ success: true, msg: "Post delete successfully" });
+  } catch (error) {
+    res.send({ success: false, msg: error.message });
+  }
+};
+
 const uploadPostImage = async (req, res) => {
   try {
     let imagePath = "/images";
@@ -131,6 +145,7 @@ module.exports = {
   dashboard,
   loadPostDashboard,
   addPost,
+  deletePost,
   securedPassword,
   uploadPostImage,
 };

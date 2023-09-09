@@ -70,6 +70,7 @@
 <%}%>
 
 <script>
+    const socket = io();
     $(document).ready(function(){
         $("#uploadForm").submit(function(event){
             event.preventDefault();
@@ -98,7 +99,7 @@
             event.preventDefault();
             let formData = {};
 
-            // get all the value from the form
+            // get all the value from the form in array manner
             $.each($(this).serializeArray(),function(i,field){
                 formData[field.name] = field.value;
             });
@@ -123,7 +124,6 @@
                         formData._id = data._id;
 
                         //emit the task
-                        const socket = io();
                         socket.emit("new_post",formData);
                     }
                     else{

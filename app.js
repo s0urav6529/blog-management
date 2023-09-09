@@ -54,8 +54,19 @@ app.use("/", blogRoute);
 
 // if anything emit inside socket it will listen
 io.on("connection", (socket) => {
-  socket.on("new_post", function (formData) {
-    socket.broadcast.emit("new_post", formData);
+  // response when a post is added by admin
+  socket.on("new_post", function (postData) {
+    io.emit("new_post", postData);
+  });
+
+  // response when a comment is added by user
+  socket.on("new_comment", function (commentData) {
+    io.emit("new_comment", commentData);
+  });
+
+  // response when a reply is added by user to other user
+  socket.on("new_reply", function (replyData) {
+    io.emit("new_reply", replyData);
   });
 });
 

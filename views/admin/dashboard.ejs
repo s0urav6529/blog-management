@@ -3,6 +3,66 @@
 <!-- Page Content  -->
 <div id="content" class="p-4 p-md-5 pt-5">
     <h2 class="mb-4">Dashboard</h2>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Sl.</th>
+                <th>Title </th>
+                <th><center>Content</center> </th>
+                <th><center>Image</center> </th>
+                <th><center>Delete</center> </th>
+            </tr>
+        </thead>
+        <tbody>
+            <%if(allPost.length > 0){
+                let cnt = 1;
+                allPost.forEach((post)=>{
+                %>
+                    <tr>
+                        <td><%= cnt++%></td>
+                        <td><%= post.title%></td>
+                        <td><%= post.content%></td>
+                        <td><img src="<%= post.image%>" alt="<%= post.image%>" width="200px" height="100px"></td>
+                        <td><a href="" class="btn btn-danger deletePost" data-id="<%= post._id%>">Delete</a></td>
+                    </tr>
+                <%
+            });}
+            else{
+                %>
+                    <tr>
+                        <td colspan="4"> No Post Found!</td>
+                    </tr>
+                <%
+            }
+            %>
+        </tbody>
+    </table>
 </div>
+<script>
+    $(document).ready(function(){
+        $('.deletePost').click(function(){
+            const postId = $(this).attr('data-id');
+            const obj = $(this);
+
+            $.ajax({
+                url:'/delete-post',
+                type:'POST',
+                data:{id:postId},
+                success:function(feedback){
+                    if(feedback.success === true){
+                        // Remove the row
+                        $(obj).parent().parent().remove();  
+                        alert(feedback.msg);
+                    }
+                    else{
+                        alert(feedback.msg);
+                    }
+                }
+
+            });
+        });
+    });
+</script>
 
 <%- include("../layouts/admin-footer.ejs") %>

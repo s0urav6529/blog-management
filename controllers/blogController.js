@@ -81,7 +81,9 @@ const addComment = async (req, res) => {
       }
     );
 
-    res.status(200).send({ success: true, msg: "Comment added!" });
+    res
+      .status(200)
+      .send({ success: true, msg: "Comment added!", _id: commentId });
   } catch (error) {
     res.status(500).send({ success: false, msg: error.message });
   }
@@ -110,9 +112,9 @@ const doReply = async (req, res) => {
       }
     );
     sendReplyMail(replierName, commenterEmail, postId);
-    res.send({ success: true, msg: "Reply added!" });
+    res.status(200).send({ success: true, msg: "Reply added!", _id: replyId });
   } catch (error) {
-    res.send({ success: false, msg: error.message });
+    res.status(500).send({ success: false, msg: error.message });
   }
 };
 

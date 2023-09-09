@@ -47,52 +47,55 @@
                         <p class="commentStatus" style="color: green;"></p>
                        
                         <!-- Single comment-->
-                        <% if(singlepost.comments.length > 0){
-                            singlepost.comments = singlepost.comments.reverse();
-                            singlepost.comments.forEach(function(comment){
-                                %>
-                                    <div class="d-flex mt-3">
-                                        <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
-                                        <div class="ms-3">
-                                            <div class="fw-bold"><%=comment.username%></div>
-                                            <%=comment.comment%>
+                        <div id="commentSection">
+                            <% if(singlepost.comments.length > 0){
+                                singlepost.comments = singlepost.comments.reverse();
+                                singlepost.comments.forEach(function(comment){
+                                    %>
+                                        <div class="d-flex mt-3">
+                                            <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
+                                            <div class="ms-3">
+                                                <div class="fw-bold"><%=comment.username%></div>
+                                                <%=comment.comment%>
 
-                                            <%if(comment.replies){
+                                                <div id="replies<%=comment._id%>">
+                                                    <%if(comment.replies){
+                                                        
+                                                        comment.replies.forEach(function(reply){
+                                                            %>
+                                                            <div class="d-flex mt-3">
+                                                                <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
+                                                                <div class="ms-3">
+                                                                    <div class="fw-bold"><%=reply.name%></div>
+                                                                    <%=reply.reply%>
+                                                                </div>
+                                                            </div>
+                                                            <%
+                                                        })
+                                                    }%>
+                                                </div>
 
-                                                comment.replies = comment.replies.reverse();
-                                                comment.replies.forEach(function(reply){
-                                                    %>
-                                                    <div class="d-flex mt-3">
-                                                        <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
-                                                        <div class="ms-3">
-                                                            <div class="fw-bold"><%=reply.name%></div>
-                                                            <%=reply.reply%>
+                                                <div class="col-md-12 mt-3">
+                                                    <form class="doReply">
+                                                        <input type="hidden" name="postId" value="<%= singlepost._id%>">
+                                                        <input type="hidden" name="commentId" value="<%= comment._id%>">
+                                                        <input type="hidden" name="commentEmail" value="<%= comment.email%>">
+                                                        <div class="form-group">
+                                                            <input type="text" class="form-control" name="name" placeholder="Enter your name" required>
                                                         </div>
-                                                    </div>
-                                                    <%
-                                                })
-                                            }%>
+                                                        <div class="form-group">
+                                                            <textarea class="form-control" name="reply" placeholder="Reply to <%= comment.username%>" required></textarea>
+                                                        </div>
+                                                        <input type="submit" value="Reply" class="btn btn-info btn-sm">
+                                                    </form>
+                                                </div>
 
-                                            <div class="col-md-12 mt-3">
-                                                <form class="do-reply">
-                                                    <input type="hidden" name="postId" value="<%= singlepost._id%>">
-                                                    <input type="hidden" name="commentId" value="<%= comment._id%>">
-                                                    <input type="hidden" name="commentEmail" value="<%= comment.email%>">
-                                                    <div class="form-group">
-                                                        <input type="text" class="form-control" name="name" placeholder="Enter your name" required>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <textarea class="form-control" name="reply" placeholder="Reply to <%= comment.username%>" required></textarea>
-                                                    </div>
-                                                    <input type="submit" value="Reply" class="btn btn-info btn-sm">
-                                                </form>
                                             </div>
-
                                         </div>
-                                    </div>
-                                <%
-                            })
-                        }%>    
+                                    <%
+                                })
+                            }%>  
+                        </div>  
                     </div>
                 </div>
             </section>
@@ -114,42 +117,107 @@
 </div>
 
 <script>
+    const socket = io();
+
     $(document).ready(function(){
+
+        // For comment section
         $('#commentForm').submit(function(event){
             event.preventDefault();
 
-            const formData = $(this).serialize();
+            // get all the value from the form in array manner
+            let formData={};
+            $.each($(this).serializeArray(),function(i,field){
+                formData[field.name] = field.value;
+            });
+
+            const obj = $(this); 
 
             $.ajax({
                 url:"/add-comment",
                 type:"POST",
                 data:formData,
                 success:function(data){
+                    
+                    // added id to form
+                    formData._id = data._id;
+                    
+                    //emit the task
+                    socket.emit("new_comment",formData);
+
+                    // reset the form
+                    $(obj)[0].reset();
+
                     $('.commentStatus').text(data.msg);
                     setTimeout(()=>{
                         $('.commentStatus').text("");
                     },3000);
+
                 }
             })
         })
-        $(".do-reply").submit(function(event){
+
+        // For reply section
+        $(".doReply").submit(function(event){
             event.preventDefault();
 
-            const formData = $(this).serialize();
-            let obj = $(this);
+            // get all the value from the form in array manner
+            const formData = {};
+            $.each($(this).serializeArray(),function(i,field){
+                formData[field.name] = field.value;
+            });
+
+            const obj = $(this);
 
             $.ajax({
                 url:"/do-reply",
                 type:"POST",
                 data:formData,
                 success:function(data){
+
+                     // added id to form
+                    formData._id = data._id;
+
+                    //emit the task
+                    socket.emit("new_reply",formData);
+
                     $(obj)[0].reset();
                     $(obj).parent().parent().append('<p>'+data.msg+'</p>');
                 }
 
             })
-        })
-    })
+        });
+
+        // Real time comment show section
+        socket.on("new_comment",function(commentData){
+            let html ="";
+            html += `<div class="d-flex mt-3">
+                        <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
+                        <div class="ms-3">
+                            <div class="fw-bold">`+commentData.username+`</div>
+                            `+commentData.comment+`
+                        </div>
+                    </div>`;
+            $("#commentSection").prepend(html);
+        });
+
+        // Realtime reply show section
+        socket.on("new_reply",function(replyData){
+            console.log(replyData);
+            let html ="";
+            html += `
+                <div class="d-flex mt-3">
+                    <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
+                    <div class="ms-3">
+                        <div class="fw-bold">`+replyData.name+`</div>
+                        `+replyData.reply+`
+                    </div>
+                </div>
+            `;
+            $('#replies'+replyData.commentId).append(html);
+        });
+        
+    });
 </script>
 
 <%- include("./layouts/footer.ejs")%>

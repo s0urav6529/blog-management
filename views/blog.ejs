@@ -1,7 +1,7 @@
 <%- include('./layouts/header.ejs')%>
 
 <!-- Page Content-->
-<div class="container px-4 px-lg-5 mb-3 allpost">
+<div class="container px-4 px-lg-5 mb-3 " id="allPost">
 <!-- Heading Row-->
 
 <%if(allpost.length > 0) {
@@ -35,14 +35,15 @@
 </div>
 
 <script>
-
     const socket = io();
-    socket.on("new_post",function(formData){
+
+    //Real time new post show
+    socket.on("new_post",function(postData){
 
         let image = "https://dummyimage.com/900x400/dee2e6/6c757d.jpg";
 
-        if(formData.image !== ''){
-            image = formData.image;
+        if(postData.image !== ''){
+            image = postData.image;
         }
 
         let html = "";
@@ -52,14 +53,14 @@
                     <img class="img-fluid rounded mb-4 mb-lg-0" src="`+image+`" alt="..." />
                 </div>
                 <div class="col-lg-5">
-                    <h1 class="font-weight-light">`+formData.title+`</h1>
-                    <p>`+formData.content+`</p>
-                    <a class="btn btn-primary" href="/post/`+formData._id+`">Read More</a>
+                    <h1 class="font-weight-light">`+postData.title+`</h1>
+                    <p>`+postData.content+`</p>
+                    <a class="btn btn-primary" href="/post/`+postData._id+`">Read More</a>
                 </div>
             </div>
         `;
 
-        $('.allpost').prepend(html);
+        $('#allPost').prepend(html);
     });
 
 </script>
