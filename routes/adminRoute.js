@@ -13,6 +13,8 @@ const {
   addPost,
   uploadPostImage,
   deletePost,
+  loadEditPost,
+  editPost,
 } = require("../controllers/adminController");
 const { isLogin } = require("../middlewares/adminLoginAuth");
 
@@ -45,5 +47,7 @@ adminRoute
   .post(upload.single("image"), isLogin, uploadPostImage);
 
 adminRoute.route("/delete-post").post(isLogin, deletePost);
+adminRoute.route("/edit-post/:id").get(isLogin, loadEditPost);
+adminRoute.route("/edit-post").post(isLogin, editPost);
 
 module.exports = adminRoute;

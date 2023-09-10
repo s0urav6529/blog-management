@@ -139,6 +139,34 @@ const uploadPostImage = async (req, res) => {
   }
 };
 
+const loadEditPost = async (req, res) => {
+  try {
+    const postId = req.params.id;
+
+    const postData = await Post.findOne({ _id: postId });
+
+    res.render("admin/editPost.ejs", { post: postData });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const editPost = async (req, res) => {
+  try {
+    const postId = req.body.postId;
+    const title = req.body.title;
+    const content = req.body.content;
+
+    const updatedata = await Post.findByIdAndUpdate(
+      { _id: postId },
+      { $set: { title: title, content: content } }
+    );
+    res.status(200).send({ success: true, msg: "Post Updated Successfully!" });
+  } catch (error) {
+    res.status(500).send({ success: false, msg: error.message });
+  }
+};
+
 module.exports = {
   blogRegister,
   blogRegisterSave,
@@ -148,4 +176,6 @@ module.exports = {
   deletePost,
   securedPassword,
   uploadPostImage,
+  loadEditPost,
+  editPost,
 };
