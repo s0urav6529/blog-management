@@ -5,6 +5,7 @@ const bcrypt = require("bcrypt");
 const blogregister = require("../models/blogRegisterModel");
 const User = require("../models/userModel");
 const Post = require("../models/postModel");
+const Setting = require("../models/settingModel");
 
 // method for password hashing
 const securedPassword = async (password) => {
@@ -168,6 +169,32 @@ const editPost = async (req, res) => {
   }
 };
 
+const loadSettings = async (req, res) => {
+  try {
+    const setting = await Setting.findOne({});
+    let postLimit = 0;
+    if (setting != null) {
+      postLimit = setting.post_limit;
+    }
+
+    res.render("admin/setting.ejs", { limit: postLimit });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const saveSettings = async (req, res) => {
+  try {
+    const postLimit = req.body.postLimit;
+
+    await Setting.updateMany({}, { post_limit: postLimit }, { upsert: true });
+
+    res.status(200).send({ success: true, msg: "Setting Updated!" });
+  } catch (error) {
+    res.status(500).send({ success: false, msg: error.message });
+  }
+};
+
 module.exports = {
   blogRegister,
   blogRegisterSave,
@@ -179,4 +206,6 @@ module.exports = {
   uploadPostImage,
   loadEditPost,
   editPost,
+  loadSettings,
+  saveSettings,
 };

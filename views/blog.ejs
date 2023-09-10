@@ -34,8 +34,80 @@
 <%}%>
 </div>
 
+<div class="container mb-3">
+    <div class="text-center">
+        <button class="btn btn-info" onclick="getPrevious()">Previous</button>
+        <button class="btn btn-info" onclick="getNext()">Next</button>
+    </div>
+</div>
+
 <script>
     const socket = io();
+
+    //For pagination
+    let start = 0;
+    let limit = <%=postLimit%>;
+
+    function getNext(){
+        
+        start = start + limit;
+
+        $.ajax({
+            url:"/get-post/"+start+"/"+limit,
+            type:"GET",
+            success:function(posts){
+                renderPosts(posts);
+            }
+        });
+    }
+
+    function getPrevious(){
+
+        start = (start - limit < 0) ? 0 : start - limit;
+
+        $.ajax({
+            url:"/get-post/"+start+"/"+limit,
+            type:"GET",
+            success:function(posts){
+                renderPosts(posts);
+            }
+        });
+    }
+
+    // for showing those pagination
+    function renderPosts(posts){
+
+        if(posts.length > 0){
+            
+            let html = "";
+
+            for(let i=0;i<posts.length;i++){
+                let image = "";
+
+                if(posts[i].image !== undefined && posts[i].image !== ""){
+                    image = `<img class="img-fluid rounded mb-4 mb-lg-0" src="`+posts[i].image+`" alt="..." />`;
+                }else{
+                    imtage = `<img class="img-fluid rounded mb-4 mb-lg-0" src="https://dummyimage.com/900x400/dee2e6/6c757d.jpg" alt="..." />`;
+                }
+
+                html += `
+                    <div class="row gx-4 gx-lg-5 align-items-center my-5" id="post`+posts[i]._id+`">
+                        <div class="col-lg-7">
+                           `+image+`
+                        </div>
+                        <div class="col-lg-5">
+                            <h1 class="font-weight-light">`+posts[i].title+`</h1>
+                            <p>`+posts[i].content+`</p>
+                            <a class="btn btn-primary" href="/post/`+posts[i]._id+`">Read More</a>
+                        </div>
+                    </div>
+                `;
+
+            }
+
+            $("#allPost").html(html);
+        }
+    }
 
     //Real time new post show
     socket.on("new_post",function(postData){

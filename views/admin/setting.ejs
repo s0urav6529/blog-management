@@ -1,0 +1,43 @@
+<%- include("../layouts/admin-header.ejs") %>
+
+<!-- Page Content  -->
+<div id="content" class="p-4 p-md-5 pt-5">
+    <h2 class="mb-4">Setting</h2>
+
+    <div class="container">
+        <form id="settingForm">
+            <div>
+                <input type="text" name="postLimit"  value="<%=limit%>" placeholder="Post limit" class="mb-3 w-50" required>
+            </div>
+            <div>
+                <input type="submit" value="Save setting" class="btn btn-info">
+            </div>
+        </form>
+        <p class="settingStatus" style="color: green;"></p>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function(){
+        $("#settingForm").submit(function(event){
+            event.preventDefault();
+
+            let formData = $(this).serialize();
+
+            $.ajax({
+                url:"/settings",
+                type:"POST",
+                data:formData,
+                success:function(feedback){
+                    $(".settingStatus").text(feedback.msg);
+                    setTimeout(()=>{
+                        $(".settingStatus").text("");
+                    },3000);
+                }
+            });
+
+        });
+    });
+</script>
+
+<%- include("../layouts/admin-footer.ejs") %>

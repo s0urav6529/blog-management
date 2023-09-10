@@ -15,6 +15,8 @@ const {
   deletePost,
   loadEditPost,
   editPost,
+  loadSettings,
+  saveSettings,
 } = require("../controllers/adminController");
 const { isLogin } = require("../middlewares/adminLoginAuth");
 
@@ -49,5 +51,7 @@ adminRoute
 adminRoute.route("/delete-post").post(isLogin, deletePost);
 adminRoute.route("/edit-post/:id").get(isLogin, loadEditPost);
 adminRoute.route("/edit-post").post(isLogin, editPost);
+
+adminRoute.route("/settings").get(isLogin, loadSettings).post(saveSettings);
 
 module.exports = adminRoute;
