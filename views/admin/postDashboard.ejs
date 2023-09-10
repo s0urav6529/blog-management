@@ -52,7 +52,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="uploadForm" enctype="multipart/form-data">
+            <form id="uploadImage" enctype="multipart/form-data">
                 <div class="modal-body">
                     <input type="file" name="image" required>
                 </div>
@@ -72,7 +72,7 @@
 <script>
     const socket = io();
     $(document).ready(function(){
-        $("#uploadForm").submit(function(event){
+        $("#uploadImage").submit(function(event){
             event.preventDefault();
 
             $.ajax({

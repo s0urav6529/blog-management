@@ -156,10 +156,11 @@ const editPost = async (req, res) => {
     const postId = req.body.postId;
     const title = req.body.title;
     const content = req.body.content;
+    const image = req.body.image;
 
     const updatedata = await Post.findByIdAndUpdate(
       { _id: postId },
-      { $set: { title: title, content: content } }
+      { $set: { title: title, content: content, image: image } }
     );
     res.status(200).send({ success: true, msg: "Post Updated Successfully!" });
   } catch (error) {
