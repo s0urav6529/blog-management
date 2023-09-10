@@ -73,6 +73,7 @@
 
 <script>
     const socket = io();
+
     $(document).ready(function(){
 
         $("#uploadImage").submit(function(event){
@@ -114,6 +115,10 @@
                 data:formData,      // we sending "formdata" to backend
                 success:function(data){     // backend send processed "data" to frontend 
                     if(data.success === true){
+
+                        // emit the task
+                        socket.emit("edit_now",formData);
+
                         $('.editStatus').text(data.msg);
                         setTimeout(()=>{
                             $('.editStatus').text("");

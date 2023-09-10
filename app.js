@@ -56,7 +56,7 @@ app.use("/", blogRoute);
 io.on("connection", (socket) => {
   // response when a post is added by admin
   socket.on("new_post", function (postData) {
-    io.emit("new_post", postData);
+    socket.broadcast.emit("new_post", postData);
   });
 
   // response when a comment is added by user
@@ -67,6 +67,16 @@ io.on("connection", (socket) => {
   // response when a reply is added by user to other user
   socket.on("new_reply", function (replyData) {
     io.emit("new_reply", replyData);
+  });
+
+  // response when a post is deleted by admin
+  socket.on("delete_now", function (deletedPostId) {
+    socket.broadcast.emit("delete_now", deletedPostId);
+  });
+
+  // response when a post is edited by admin
+  socket.on("edit_now", function (editedPostData) {
+    socket.broadcast.emit("edit_now", editedPostData);
   });
 });
 

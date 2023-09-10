@@ -42,6 +42,7 @@
     </table>
 </div>
 <script>
+    const socket = io();
     $(document).ready(function(){
         $('.deletePost').click(function(){
             const postId = $(this).attr('data-id');
@@ -53,8 +54,12 @@
                 data:{id:postId},
                 success:function(feedback){
                     if(feedback.success === true){
-                        // Remove the row
-                        $(obj).parent().parent().remove();  
+                        
+                        // create new emit
+                        socket.emit("delete_now",postId);
+
+                        // Remove the row from admin dashboard
+                        $(obj).parent().parent().remove();
                         alert(feedback.msg);
                     }
                     else{

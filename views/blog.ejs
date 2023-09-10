@@ -10,7 +10,7 @@
 
     allpost.forEach((post)=>{
         %>
-            <div class="row gx-4 gx-lg-5 align-items-center my-5">
+            <div class="row gx-4 gx-lg-5 align-items-center my-5" id="post<%=post._id%>">
                 <div class="col-lg-7">
                     <% if(post.image !== undefined && post.image !== ""){
                         %>
@@ -61,6 +61,23 @@
         `;
 
         $('#allPost').prepend(html);
+    });
+
+    //Real time post edit
+    socket.on("edit_now",function(editedPostData){
+
+        const postDiv = document.getElementById("post"+editedPostData.postId);
+
+        postDiv.querySelector(".img-fluid").src = editedPostData.image || "https://dummyimage.com/900x400/dee2e6/6c757d.jpg";
+        postDiv.querySelector("h1").textContent = editedPostData.title;
+        postDiv.querySelector("p").textContent = editedPostData.content;
+        
+
+    });
+
+    //Real time new post delete
+    socket.on("delete_now",function(deletedPostId){
+        document.getElementById("post"+deletedPostId).remove();
     });
 
 </script>
