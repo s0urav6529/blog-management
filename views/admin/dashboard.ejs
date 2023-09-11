@@ -23,7 +23,7 @@
                     <tr>
                         <td><%= cnt++%></td>
                         <td><%= post.title%></td>
-                        <td><%= post.content%></td>
+                        <td><%- post.content%></td>
                         <td><img src="<%= post.image%>" alt="<%= post.image%>" width="200px" height="100px"></td>
                         <td><a href="" class="btn btn-danger deletePost" data-id="<%= post._id%>">Delete</a></td>
                         <td><a href="/edit-post/<%= post._id%>" class="btn btn-warning editPost">Edit</a></td>
