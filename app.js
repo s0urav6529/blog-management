@@ -7,6 +7,7 @@ const bodyParser = require("body-parser");
 const path = require("path");
 const session = require("express-session");
 const { Server } = require("socket.io");
+const ObjectId = require("mongoose").Types.ObjectId;
 
 //internal module
 const dbConnection = require("./config/dbConnection");
@@ -14,6 +15,7 @@ dbConnection();
 const adminRoute = require("./routes/adminRoute");
 const userRoute = require("./routes/userRoute");
 const blogRoute = require("./routes/blogRoute");
+const Post = require("./models/postModel");
 const { isBlogRegistered } = require("./middlewares/isBlogRegistered");
 
 // create server of http & socket
@@ -77,6 +79,23 @@ io.on("connection", (socket) => {
   // response when a post is edited by admin
   socket.on("edit_now", function (editedPostData) {
     socket.broadcast.emit("edit_now", editedPostData);
+  });
+
+  // response when a post is viwes by user
+  socket.on("post_views_increment", async function (postId) {
+    try {
+      const postData = await Post.findOneAndUpdate(
+        { _id: new ObjectId(postId) },
+        { $inc: { views: 1 } },
+        { returnOriginal: false }
+      );
+      socket.broadcast.emit("post_views_increment", postData);
+    } catch (error) {
+      socket.broadcast.emit(
+        "post_views_increment",
+        "Error updating post views"
+      );
+    }
   });
 });
 

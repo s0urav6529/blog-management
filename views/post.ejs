@@ -11,7 +11,20 @@
                     <!-- Post title-->
                     <h1 class="fw-bolder mb-1"><%= singlepost.title%></h1>
                     <!-- Post meta content-->
-                    <div class="text-muted fst-italic mb-2">Posted by admin</div>
+                    <div class="text-muted fst-italic mb-2">Posted by admin
+                        <b id="viewsCount">
+                            <%if(singlepost.views !== undefined){
+                                %>
+                                    <%= singlepost.views + 1 %> views
+                                <%   
+                            }else{
+                                %>
+                                    <%= 1 %> views
+                                <%   
+                            }%>
+                        </b>
+                    </div>
+
                     <!-- Post categories-->
                     <!-- <a class="badge bg-secondary text-decoration-none link-light" href="#!">Web Design</a> -->
                     <!-- <a class="badge bg-secondary text-decoration-none link-light" href="#!">Freebies</a> -->
@@ -118,6 +131,7 @@
 
 <script>
     const socket = io();
+    let postId = "<%= singlepost._id%>"; // get the post id
 
     $(document).ready(function(){
 
@@ -203,7 +217,6 @@
 
         // Realtime reply show section
         socket.on("new_reply",function(replyData){
-            console.log(replyData);
             let html ="";
             html += `
                 <div class="d-flex mt-3">
@@ -216,6 +229,16 @@
             `;
             $('#replies'+replyData.commentId).append(html);
         });
+
+        // Realtime views count
+        socket.emit("post_views_increment",postId);
+        socket.on("post_views_increment",function(postData){
+            if(postData._id === postId){
+                $("#viewsCount").text(postData.views+" views");
+            }
+        });
+
+
         
     });
 </script>
