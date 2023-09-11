@@ -158,6 +158,14 @@ const resetPassword = async (req, res) => {
   }
 };
 
+const loadAbout = async (req, res) => {
+  try {
+    res.render("about.ejs");
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
 module.exports = {
   loadLogin,
   loadLogout,
@@ -167,4 +175,5 @@ module.exports = {
   forgetPasswordVarify,
   loadResetPassword,
   resetPassword,
+  loadAbout,
 };

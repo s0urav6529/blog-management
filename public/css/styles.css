@@ -11292,3 +11292,21 @@ textarea.form-control-lg {
   pointer-events: none;
   color: gray;
 }
+.about-section {
+  padding: 50px;
+  text-align: center;
+  background-color: #474e5d;
+  color: white;
+}
+.heading{
+  margin-top: 5px;
+  text-align: left;
+  background-color: #474e5d;
+  color: white;
+}
+.paragraph{
+  padding: 0px;
+  text-align: left;
+  background-color: #474e5d;
+  color: white;
+}

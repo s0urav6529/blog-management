@@ -8,6 +8,7 @@ const {
   forgetPasswordVarify,
   loadResetPassword,
   resetPassword,
+  loadAbout,
 } = require("../controllers/userController");
 const { isLogout, isLogin } = require("../middlewares/adminLoginAuth");
 const userRoute = express.Router();
@@ -25,5 +26,7 @@ userRoute
   .route("/reset-password")
   .get(isLogout, loadResetPassword)
   .post(resetPassword);
+
+userRoute.route("/about").get(loadAbout);
 
 module.exports = userRoute;
