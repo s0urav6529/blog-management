@@ -7,6 +7,7 @@ const bodyParser = require("body-parser");
 const path = require("path");
 const session = require("express-session");
 const { Server } = require("socket.io");
+const cookieParser = require("cookie-parser");
 const ObjectId = require("mongoose").Types.ObjectId;
 
 //internal module
@@ -16,6 +17,8 @@ const adminRoute = require("./routes/adminRoute");
 const userRoute = require("./routes/userRoute");
 const blogRoute = require("./routes/blogRoute");
 const Post = require("./models/postModel");
+const Like = require("./models/likeModel");
+
 const { isBlogRegistered } = require("./middlewares/isBlogRegistered");
 
 // create server of http & socket
@@ -37,6 +40,9 @@ app.use(
     saveUninitialized: true,
   })
 );
+
+//use cookie-parse
+app.use(cookieParser(process.env.COOKIE_SECRET));
 
 //json body parser
 app.use(express.json());
@@ -96,6 +102,54 @@ io.on("connection", (socket) => {
         "Error updating post views"
       );
     }
+  });
+
+  socket.on("new_like", async function (data) {
+    try {
+      await Like.updateOne(
+        { post_id: data.postId, user_id: data.userId },
+        { like: 1 },
+        { upsert: true }
+      );
+      const likes = await Like.find({
+        post_id: data.postId,
+        like: 1,
+      }).count();
+      const dislikes = await Like.find({
+        post_id: data.postId,
+        like: 0,
+      }).count();
+
+      io.emit("new_like_dislike", {
+        postId: data.postId,
+        likes: likes,
+        dislikes: dislikes,
+      });
+    } catch (error) {}
+  });
+
+  socket.on("new_dislike", async function (data) {
+    try {
+      await Like.updateOne(
+        { post_id: data.postId, user_id: data.userId },
+        { like: 0 },
+        { upsert: true }
+      );
+      const likes = await Like.find({
+        post_id: data.postId,
+        like: 1,
+      }).count();
+      const dislikes = await Like.find({
+        post_id: data.postId,
+        like: 0,
+      }).count();
+
+      io.emit("new_like_dislike", {
+        postId: data.postId,
+        likes: likes,
+        dislikes: dislikes,
+      });
+    } catch (error) {}
   });
 });
 

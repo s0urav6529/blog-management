@@ -10,6 +10,7 @@
 
     <title>Blog Management</title>
     <link href="../css/styles.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
   </head>
@@ -21,12 +22,41 @@
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                <li class="nav-item"><a class="nav-link active" aria-current="page" href="/">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="#!">About</a></li>
-                <li class="nav-item"><a class="nav-link" href="#!">Contact</a></li>
+                <li class="nav-item home"><a class="nav-link active" aria-current="page" href="/">Home</a></li>
+                <li class="nav-item about"><a class="nav-link" href="/about">About</a></li>
+                <li class="nav-item contact"><a class="nav-link" href="/contact">Contact</a></li>
+                <li class="nav-item logout"><a class="nav-link" href="/logout">Logout</a></li>
+                <li class="nav-item login"><a class="nav-link" href="/login">Login</a></li>
+                <li class="nav-item register"><a class="nav-link" href="/register">Register</a></li>
             </ul>
         </div>
     </div>
 </nav>
+
+<script>
+
+  function getCookie(name){
+    let matches = document.cookie.match(new RegExp(
+      "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"));
+    return matches ? decodeURIComponent(matches[1]) : undefined;
+  }
+
+  let userData = null;
+  let userId = null;
+
+  if(getCookie('user') === undefined){
+    document.getElementsByClassName('logout')[0].style.display = 'none';
+    document.getElementsByClassName('login')[0].style.display = 'block';
+    document.getElementsByClassName('register')[0].style.display = 'block';
+  }
+  else{
+    userData = JSON.parse(getCookie('user'));
+    userId = userData._id;
+    document.getElementsByClassName('logout')[0].style.display = 'block';
+    document.getElementsByClassName('login')[0].style.display = 'none';
+    document.getElementsByClassName('register')[0].style.display = 'none';
+  }
+
+</script>
 
     

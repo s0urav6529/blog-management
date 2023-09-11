@@ -1,10 +1,11 @@
 //external import
-const { ObjectId } = require("mongodb");
+const ObjectId = require("mongoose").Types.ObjectId;
 const nodemailer = require("nodemailer");
 
 //internal import
 const Post = require("../models/postModel");
 const Setting = require("../models/settingModel");
+const Like = require("../models/likeModel");
 
 const sendReplyMail = async (replierName, commenterEmail, postId) => {
   try {
@@ -57,8 +58,18 @@ const loadBlog = async (req, res) => {
 
 const loadpost = async (req, res) => {
   try {
+    const likes = await Like.find({ post_id: req.params.id, like: 1 }).count();
+    const dislikes = await Like.find({
+      post_id: req.params.id,
+      like: 0,
+    }).count();
+
     const singlepost = await Post.findOne({ _id: req.params.id });
-    res.render("post.ejs", { singlepost: singlepost });
+    res.render("post.ejs", {
+      singlepost: singlepost,
+      likes: likes,
+      dislikes: dislikes,
+    });
   } catch (err) {
     console.log(err.message);
   }
