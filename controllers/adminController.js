@@ -20,13 +20,7 @@ const securedPassword = async (password) => {
 //registration controller
 const blogRegister = async (req, res) => {
   try {
-    const blogregistered = await blogregister.find({});
-
-    if (Object.keys(blogregistered).length > 0) {
-      res.redirect("/login");
-    } else {
-      res.render("blogRegister");
-    }
+    res.render("blogRegister.ejs");
   } catch (err) {
     console.log(err.message);
   }

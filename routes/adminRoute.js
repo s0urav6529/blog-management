@@ -35,7 +35,7 @@ const upload = multer({ storage: storage });
 
 adminRoute
   .route("/blog-register")
-  .get(blogRegister)
+  .get(isLogin, blogRegister)
   .post(upload.single("blog_image"), blogRegisterSave);
 
 adminRoute.route("/dashboard").get(isLogin, dashboard);

@@ -165,6 +165,13 @@ const loadAbout = async (req, res) => {
     console.log(error.message);
   }
 };
+const loadContact = async (req, res) => {
+  try {
+    res.render("contact.ejs");
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 
 module.exports = {
   loadLogin,
@@ -176,4 +183,5 @@ module.exports = {
   loadResetPassword,
   resetPassword,
   loadAbout,
+  loadContact,
 };
