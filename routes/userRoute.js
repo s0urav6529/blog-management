@@ -1,7 +1,6 @@
 const express = require("express");
 const {
   loadLogin,
-  varifyLogin,
   userProfile,
   loadLogout,
   loadForgetPassword,
@@ -10,22 +9,25 @@ const {
   resetPassword,
   loadAbout,
   loadContact,
+  loadUserRegister,
 } = require("../controllers/userController");
-const { isLogout, isLogin } = require("../middlewares/adminLoginAuth");
+const { isUserLogout, isUserLogin } = require("../middlewares/adminLoginAuth");
+const varifyLogin = require("../controllers/common/varifyLogin");
 const userRoute = express.Router();
 
 //user routes
-userRoute.route("/login").get(isLogout, loadLogin).post(varifyLogin);
-userRoute.route("/logout").get(isLogin, loadLogout);
-userRoute.route("/profile").get(userProfile);
+userRoute.route("/login").get(isUserLogout, loadLogin).post(varifyLogin);
+userRoute.route("/logout").get(isUserLogin, loadLogout);
+userRoute.route("/profile").get(isUserLogin, userProfile);
+userRoute.route("/register").get(isUserLogin, loadUserRegister);
 userRoute
   .route("/forget-password")
-  .get(isLogout, loadForgetPassword)
+  .get(isUserLogin, loadForgetPassword)
   .post(forgetPasswordVarify);
 
 userRoute
   .route("/reset-password")
-  .get(isLogout, loadResetPassword)
+  .get(isUserLogin, loadResetPassword)
   .post(resetPassword);
 
 userRoute.route("/about").get(loadAbout);

@@ -6,8 +6,18 @@ const blogregister = require("../models/blogRegisterModel");
 const User = require("../models/userModel");
 const Post = require("../models/postModel");
 const Setting = require("../models/settingModel");
+const Admin = require("../models/adminModel");
 
-// method for password hashing
+//admin-loginload
+const loadAdminLogin = async (req, res) => {
+  try {
+    res.render("login-admin.ejs");
+  } catch (err) {
+    console.log(err.message);
+  }
+};
+
+//method for password hashing
 const securedPassword = async (password) => {
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -20,9 +30,54 @@ const securedPassword = async (password) => {
 //registration controller
 const blogRegister = async (req, res) => {
   try {
-    res.render("blogRegister.ejs");
+    res.render("admin/adminRegister.ejs");
   } catch (err) {
     console.log(err.message);
+  }
+};
+
+const adminRegister = async (req, res) => {
+  try {
+    res.render("admin/adminRegister.ejs");
+  } catch (err) {
+    console.log(err.message);
+  }
+};
+
+// save in database new admin data
+const saveAdminData = async (req, res) => {
+  try {
+    //get the data from form
+    const name = req.body.name;
+    const email = req.body.email;
+    const phone = req.body.phone;
+    const password = req.body.password;
+    const confirm_password = req.body.confirm_password;
+    const admin_image = req.file.filename;
+    const is_admin = req.body.is_admin;
+
+    if (password !== confirm_password) {
+      return res.status(400).send("Password not matched");
+    }
+
+    //hash the password
+    const hashedPassword = await securedPassword(password);
+
+    // create object for adminModel for save the data
+    const adminData = new Admin({
+      name: name,
+      email: email,
+      phone: phone,
+      is_admin: is_admin,
+      image: admin_image,
+      password: hashedPassword,
+    });
+    // save the admin data to the adminModel
+    await adminData.save();
+    //render to dashboard
+    res.redirect("/dashboard");
+  } catch (error) {
+    return res.status(500).send("Internal Server Error");
   }
 };
 
@@ -72,7 +127,7 @@ const blogRegisterSave = async (req, res) => {
 const dashboard = async (req, res) => {
   try {
     const allPost = await Post.find({});
-    res.render("admin/dashboard", { allPost: allPost });
+    res.render("admin/dashboard.ejs", { allPost: allPost });
   } catch (err) {
     console.log(err.message);
   }
@@ -189,7 +244,16 @@ const saveSettings = async (req, res) => {
   }
 };
 
+const loadUserProfile = async (req, res) => {
+  try {
+    res.render("admin/usersProfile.ejs");
+  } catch (err) {
+    console.log(err.message);
+  }
+};
+
 module.exports = {
+  loadAdminLogin,
   blogRegister,
   blogRegisterSave,
   dashboard,
@@ -202,4 +266,7 @@ module.exports = {
   editPost,
   loadSettings,
   saveSettings,
+  adminRegister,
+  saveAdminData,
+  loadUserProfile,
 };

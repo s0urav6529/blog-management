@@ -1,0 +1,57 @@
+<%- include("../layouts/admin-header.ejs") %>
+
+    <!-- Page Content  -->
+    <div id="content" class="p-4 p-md-5 pt-5">
+        <h2 class="mb-4">Add New Admin</h2>
+        <div class="container">
+            <form action="" method="POST" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="col-sm-20">
+                        <input type="text" name="name" placeholder="Enter Admin Name" required>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-sm-20">
+                        <input type="email" name="email" placeholder="Enter Admin Email" required>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-sm-20">
+                        <input type="text" name="phone" placeholder="Enter Admin phone" required>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-sm-20">
+                        <input type="password" name="password" placeholder="Enter Password" required>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-sm-20">
+                        <input type="password" name="confirm_password" placeholder="Confirm Password" required>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-sm-20">
+                        <label><b>Admin image </b></label>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-sm-20">
+                        <input type="file" name="admin_image" required>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-sm-20">
+                        <input type="hidden" name="is_admin" value="1">
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-sm-20">
+                        <input type="submit" class="btn btn-primary" value="Register">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+<%- include("../layouts/admin-footer.ejs") %>

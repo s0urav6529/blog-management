@@ -17,8 +17,16 @@ const {
   editPost,
   loadSettings,
   saveSettings,
+  saveAdminData,
+  adminRegister,
+  loadAdminLogin,
+  loadUserProfile,
 } = require("../controllers/adminController");
-const { isLogin } = require("../middlewares/adminLoginAuth");
+const {
+  isAdminLogin,
+  isAdminLogout,
+} = require("../middlewares/adminLoginAuth");
+const varifyLogin = require("../controllers/common/varifyLogin");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -32,26 +40,32 @@ const storage = multer.diskStorage({
 
 // create upload varible for file
 const upload = multer({ storage: storage });
-
 adminRoute
-  .route("/blog-register")
-  .get(isLogin, blogRegister)
-  .post(upload.single("blog_image"), blogRegisterSave);
+  .route("/add-admin")
+  .get(isAdminLogin, adminRegister)
+  .post(upload.single("admin_image"), saveAdminData);
 
-adminRoute.route("/dashboard").get(isLogin, dashboard);
+adminRoute.route("/dashboard").get(isAdminLogin, dashboard);
 adminRoute
   .route("/create-post")
-  .get(isLogin, loadPostDashboard)
-  .post(isLogin, addPost);
+  .get(isAdminLogin, loadPostDashboard)
+  .post(isAdminLogin, addPost);
 
 adminRoute
   .route("/upload-post-image")
-  .post(upload.single("image"), isLogin, uploadPostImage);
+  .post(upload.single("image"), isAdminLogin, uploadPostImage);
 
-adminRoute.route("/delete-post").post(isLogin, deletePost);
-adminRoute.route("/edit-post/:id").get(isLogin, loadEditPost);
-adminRoute.route("/edit-post").post(isLogin, editPost);
+adminRoute
+  .route("/login-admin")
+  .get(isAdminLogout, loadAdminLogin)
+  .post(varifyLogin);
+adminRoute.route("/delete-post").post(isAdminLogin, deletePost);
+adminRoute.route("/edit-post/:id").get(isAdminLogin, loadEditPost);
+adminRoute.route("/edit-post").post(isAdminLogin, editPost);
 
-adminRoute.route("/settings").get(isLogin, loadSettings).post(saveSettings);
-
+adminRoute
+  .route("/settings")
+  .get(isAdminLogin, loadSettings)
+  .post(saveSettings);
+adminRoute.route("/users-profile").get(isAdminLogin, loadUserProfile);
 module.exports = adminRoute;

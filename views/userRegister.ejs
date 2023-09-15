@@ -1,26 +1,11 @@
 <%- include("./layouts/header.ejs") %>
     <div>
         <div class="container mb-5 mt-5" >
-            <h1>Blog Register</h1>
+            <h1>User Register</h1><br>
             <form action="" method="POST" enctype="multipart/form-data">
                 <div class="row">
                     <div class="col-sm-20">
-                        <input type="text" name="blog_title" placeholder="Enter Blog Title" required>
-                    </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col-sm-20">
-                        <input type="file" name="blog_image"required>
-                    </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col-sm-20">
-                        <textarea name="description" placeholder="Enter Description" required></textarea>
-                    </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col-sm-20">
-                        <input type="text" name="admin_name" placeholder="Enter Admin Name" required>
+                        <input type="text" name="user_name" placeholder="Enter User Name" required>
                     </div>
                 </div>
                 <div class="row mt-3">
@@ -35,6 +20,22 @@
                 </div>
                 <div class="row mt-3">
                     <div class="col-sm-20">
+                        <input type="password" name="confirm_password" placeholder="Confirm Password" required>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-sm-20">
+                        <textarea name="comment" placeholder="Enter comment"></textarea>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-sm-20">
+                        <input type="hidden" name="is_admin" value="0" >
+                    </div>
+                </div>
+                <br>
+                <div class="row mt-3">
+                    <div class="col-sm-20">
                         <input type="submit" class="btn btn-primary" value="Register">
                     </div>
                 </div>
@@ -42,10 +43,10 @@
         </div>
     </div>
 
-    <% if(typeof message !== "undefined"){ %>
+    <!-- <% if(typeof message !== "undefined"){ %>
 
         <p style="color: red;"><%= message%></p>
        
-    <% }%>
+    <% }%> -->
 
 <%- include("./layouts/footer.ejs") %>

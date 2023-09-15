@@ -42,7 +42,7 @@ app.use(
 );
 
 //use cookie-parse
-app.use(cookieParser(process.env.COOKIE_SECRET));
+app.use(cookieParser());
 
 //json body parser
 app.use(express.json());
